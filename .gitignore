@@ -1,0 +1,11 @@
+.cabal-sandbox/
+cabal.sandbox.config
+Sat
+*.o
+*.hi
+*.a
+
+# Extensions used by minisat build system
+*.or
+*.od
+*.op
