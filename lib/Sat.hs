@@ -32,6 +32,94 @@ import qualified Data.Set as S
 import Data.Monoid
 import Data.List
 import Data.Maybe
+
+{-
+  Goal: we want a list of installation tasks
+
+   - Install fresh package X-3 with flags [+f1,-f2]
+   - Install fresh package Y-2 with flags [-f3]
+   - Use installed/cached package Z-3-<hash123>
+
+  Each package has a bunch of pre-conditions that must be satisfied.
+
+   - Package Z-1 must be available; this can be satisfied by specifying
+     the installed package-id of a package or referring to an earlier
+     installation task.
+   - Build tool B-3 must be available.
+
+  
+
+  Package Requirements:
+ 
+    reqs :: PkgName -> Version -> FlagAssignment -> [Requirements]
+
+-}
+
+
+-- PackageId = PackageName + Version
+
+data PackageConfig = PackageConfig
+  { pkgCfgPackageId :: !PackageId
+  , pkgCfgFlags     :: !FlagAssignment
+  } deriving (Eq, Ord, Show)
+
+type PackageCandidates = Dependency  -- package name + version range
+
+--  InstalledPackageId = item in the package DB, a way to refer to a
+--  PackageConfig that has been installed in a DB
+
+data CabalEnv
+
+availableVersions :: CabalEnv -> PackageName -> IO [PackageId]
+availableVersions = undefined
+
+packageConfigs :: CabalEnv -> PackageId -> IO [PackageConfig]
+packageConfigs = undefined
+
+data Constraint
+  = DependsOn !PackageConfig !PackageName [Version]
+  | HasConfigs !PackageId [PackageConfig]
+  | OnlyOneConfig [PackageConfig]
+  | OnlyOneVersion PackageName [Version]
+  | Want !PackageId
+  deriving (Eq, Ord, Show)
+
+
+{-
+
+Constraint Language
+-------------------
+
+  dependsOn(<PackageConfig>,  <Package, [Version]>)
+    = dependsOn1(<Package, Version, Flags>, <Package, Version>, 
+
+-}
+
+data Goal
+  = HavePackage PackageName Version
+
+
+
+
+data Solution
+  = UseInstalled InstalledPackageId
+    -- Constraints: same dependencies as installed
+  | InstallPackage PackageName PackageVersion
+    -- 
+
+-- | Fully describes a package to be installed.  It describes configuration
+-- options and the full dependency DAG.  If we canonicalise and hash these we can
+-- create keys based on which we can hash build results.
+data UniquePackageId = UniquePackageId
+  { upiName       :: !PackageName
+  , upiVersion    :: !Version
+  , upiBuildFlags :: !FlagAssignment
+  , upiDepends    :: [UniquePackageId]
+  } deriving (Eq, Ord, Show)
+
+
+
+
 -- main = do
 --   runMinisatM $ do
 --     xs <- forM [1..10000] $ \i -> do
@@ -56,6 +144,9 @@ import Data.Maybe
 --     forM_ [v1, v2, v3] $ \v -> do
 --       x <- modelValue v
 --       liftIO $ print (v, x)
+
+
+
 
 main = do
   let verbosity = normal

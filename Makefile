@@ -44,6 +44,14 @@ Sat: minisat/core/Solver.or minisat/core/Solver.or
 Sat: lib/Sat.hs cbits/wrapper.o lib/Minisat.hs lib/PackageIndex.hs 
 	$(GHC) --make $^ -Icbits -ilib -icabal-install -lstdc++ -o $@ -optP-include -optPautohack/cabal_macros.h
 
+Sat2: minisat/core/Solver.or minisat/core/Solver.or
+Sat2: lib/Sat2.hs cbits/wrapper.o lib/Minisat.hs lib/PackageIndex.hs 
+	$(GHC) --make $^ -Icbits -ilib -icabal-install -lstdc++ -o $@ -optP-include -optPautohack/cabal_macros.h
+
+.PHONY: ghci
+ghci:
+	$(GHC) --interactive -Icbits -ilib -icabal-install -optP-include -optPautohack/cabal_macros.h
+
 #
 # Create a fresh checkout and build that.  Hopefully, that'll catch
 # most "bad commit" style issues.
