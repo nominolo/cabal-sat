@@ -403,5 +403,5 @@ main = do
           map (renderConstraint (`M.lookup` sol)) cs
 
 
-[-u, +a, -b, -c]
-[-u]
+-- [-u, +a, -b, -c]
+-- [-u]

@@ -1,6 +1,7 @@
 .cabal-sandbox/
 cabal.sandbox.config
 Sat
+Sat2
 *.o
 *.hi
 *.a
